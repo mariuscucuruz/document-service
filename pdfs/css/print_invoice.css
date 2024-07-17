@@ -1,0 +1,202 @@
+
+:root {
+  --base-font-size: 13px;
+}
+
+:root {
+  --font-size-xxxxxl: 1.84615rem;
+  --font-size-xxxxl: 1.75rem;
+  --font-size-xxxl: 1.69231rem;
+  --font-size-xxl: 1.61538rem;
+  --font-size-xl: 1.38462rem;
+  --font-size-l: 1.23077rem;
+  --font-size-xm: 1.07692rem;
+  --font-size-m: 1rem;
+  --font-size-s: 0.92308rem;
+  --font-size-xs: 0.76923rem;
+  --font-size-xxs: 0.69231rem;
+}
+
+@use "sass:math";
+
+.iconClose {
+  background-image: url(../images/iconClose.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.logoBrand {
+  background-image: url(../images/logoCompany.svg);
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 230px;
+}
+
+.iconAccount {
+  background-image: url(../images/iconCUstomer.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.iconPoundSign {
+  background-image: url(../images/iconPoundSign.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#invoice-page thead {
+  display: table-header-group;
+}
+#invoice-page tr {
+  page-break-inside: avoid;
+}
+#invoice-page header {
+  z-index: -1;
+}
+#invoice-page.preview #invoice-page-container {
+  position: relative;
+}
+#invoice-page #page-title-wrapper {
+  display: none;
+}
+#invoice-page #invoice-page-container {
+  padding: 20px 20px 20px 20px;
+}
+#invoice-page #invoice-page-container span {
+  font-weight: bold;
+}
+#invoice-page #invoice-page-container .branding, #invoice-page #invoice-page-container .invoice {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+}
+#invoice-page #invoice-page-container .branding .brand_logo img, #invoice-page #invoice-page-container .invoice .brand_logo img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+#invoice-page #invoice-page-container .branding .brand_image, #invoice-page #invoice-page-container .invoice .brand_image {
+  margin-top: 30px;
+}
+#invoice-page #invoice-page-container .branding p, #invoice-page #invoice-page-container .invoice p {
+  margin-bottom: 0;
+}
+#invoice-page #invoice-page-container .invoice_details, #invoice-page #invoice-page-container .charges_table {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+#invoice-page #invoice-page-container .invoice_details table, #invoice-page #invoice-page-container .charges_table table {
+  border: 1px solid black;
+  width: 100%;
+}
+#invoice-page #invoice-page-container .invoice_details table tr th, #invoice-page #invoice-page-container .charges_table table tr th {
+  border: 1px solid black !important;
+  font-weight: bold;
+  color: black;
+  padding: 10px !important;
+  text-align: left !important;
+  vertical-align: top !important;
+}
+#invoice-page #invoice-page-container .invoice_details table td, #invoice-page #invoice-page-container .charges_table table td {
+  border: 1px solid black;
+  padding: 10px !important;
+  text-align: left !important;
+  vertical-align: top !important;
+}
+#invoice-page #invoice-page-container .invoice_details .net_invoice .net_label, 
+#invoice-page #invoice-page-container .invoice_details .net_invoice .price, 
+#invoice-page #invoice-page-container .charges_table .net_invoice .net_label, 
+#invoice-page #invoice-page-container .charges_table .net_invoice .price {
+  display: inline-block;
+  white-space: nowrap;
+}
+#invoice-page #invoice-page-container .invoice_details .net_invoice .net_label,
+ #invoice-page #invoice-page-container .charges_table .net_invoice .net_label {
+  text-align: left;
+  padding-right: 40px;
+}
+#invoice-page #invoice-page-container .invoice_details .net_invoice .price, 
+#invoice-page #invoice-page-container .charges_table .net_invoice .price {
+  padding-right: 40px;
+}
+#invoice-page #invoice-page-container .invoice_table th,
+#invoice-page #invoice-page-container .invoice_table td {
+  white-space: nowrap;
+}
+#invoice-page #invoice-page-container .invoice_table .invoice_table__description {
+  width: 50%;
+}
+#invoice-page #invoice-page-container .charges_table col.charges_table__startend {
+  width: 10%;
+}
+#invoice-page #invoice-page-container .charges_table col.charges_table__cardno {
+  width: 10%;
+}
+#invoice-page #invoice-page-container .charges_table col.charges_table__chargersite {
+  width: 13%;
+}
+#invoice-page #invoice-page-container .charges_table col.charges_table__energy {
+  width: 8%;
+}
+#invoice-page #invoice-page-container .charges_table col.charges_table__tariff {
+  width: 24%;
+}
+#invoice-page #invoice-page-container .charges_table col.charges_table__unrounded_cost {
+  width: 12%;
+}
+#invoice-page #invoice-page-container .charges_table col.charges_table__donation {
+  width: 12%;
+}
+#invoice-page #invoice-page-container .charges_table col.charges_table__cost {
+  width: 10%;
+}
+#invoice-page #invoice-page-container .company {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  margin-bottom: 30px;
+}
+#invoice-page #invoice-page-container .company > div {
+  width: 33%;
+}
+#invoice-page #invoice-page-container .company > div p {
+  margin-bottom: 0px;
+}
+#invoice-page #invoice-page-container .company > div span {
+  padding-right: 5px;
+}
+#invoice-page #invoice-page-container .company > div > div {
+  margin-top: 15px;
+}
+#invoice-page.print * {
+  font-size: 0.76923rem;
+  font-size: var(--font-size-xs);
+  line-height: unset;
+}
+#invoice-page.print #invoice-page-container .invoice,
+#invoice-page.print #invoice-page-container .brand_address {
+  line-height: 70%;
+}
+#invoice-page.print #invoice-page-container .invoice .brand_address_name,
+#invoice-page.print #invoice-page-container .brand_address .brand_address_name {
+  line-height: 110%;
+}
+#invoice-page.print #invoice-page-container .net_invoice {
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+#invoice-page.print #invoice-page-container .net_invoice .net_detail > div {
+  font-size: 0.76923rem;
+  font-size: var(--font-size-xs);
+}
+#invoice-page.print #invoice-page-container .company {
+  margin-bottom: 20px;
+}
+#invoice-page.print #invoice-page-container .company .address {
+  line-height: 70%;
+}

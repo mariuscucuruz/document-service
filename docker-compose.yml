@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  document-service:
+    image: mariux/document-service:local
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.local
+      args:
+        - UID=${UID:-(id -u)}
+    container_name: document-service
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:${app_port:-8089}:8089
+    volumes:
+      - .:/app/.
+      # - ./.env:/app/.env
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  redis:
+    image: redis:latest
+    container_name: document-service-${redis_host}
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:${redis_port:-6380}:6379
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - redis-data-volume:/data
+
+volumes:
+  redis-data-volume:
