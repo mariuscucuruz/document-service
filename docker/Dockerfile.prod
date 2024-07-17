@@ -1,0 +1,6 @@
+FROM mariux/document-service:prod
+
+WORKDIR /app
+COPY . /app
+
+CMD ["./startup_wrapper.sh"]

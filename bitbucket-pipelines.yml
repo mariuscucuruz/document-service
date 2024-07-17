@@ -1,0 +1,85 @@
+image: atlassian/default-image:3
+
+pipelines:
+  default:
+    - parallel:
+      - step:
+          name: Lint the Python code
+          image: python:3.11
+          caches:
+            - pip
+          script:
+            - pip install pylint
+            - pip install -r requirements.txt
+            - pylint $(find . -name "*.py" | xargs)
+            # Enforce style consistency across Python projects https://flake8.pycqa.org
+            # - pip install flake8
+            # - flake8 . --extend-exclude=dist,build --show-source --statistics
+
+      - step:
+          name: Lint the Dockerfile
+          image: hadolint/hadolint:latest-debian
+          script:
+            - hadolint docker/Dockerfile.build
+
+      - step:
+          name: Build and Test
+          script:
+            - DOCKERFILE_BUILD="docker/Dockerfile.build"
+            - IMAGE_NAME="document-service:staging"
+            - IMAGE=mariux/${IMAGE_NAME}
+            - echo ${DOCKERHUB_PASSWORD} | docker login --username "${DOCKERHUB_USERNAME}" --password-stdin
+            - docker build . --no-cache --file ${DOCKERFILE_BUILD} --tag ${IMAGE}
+          services:
+            - docker
+          caches:
+            - docker
+
+      - step:
+          name: Build to Staging
+          deployment: Staging
+          script:
+            - export BUILD_TIMESTAMP="$(date +%s)"
+            - DOCKERFILE_BUILD="docker/Dockerfile.build"
+            - IMAGE_NAME="document-service:staging"
+            - IMAGE=mariux/${IMAGE_NAME}
+            - ARTIFACT_FILE="document-service-staging.tar"
+            - echo ${DOCKERHUB_PASSWORD} | docker login --username "${DOCKERHUB_USERNAME}" --password-stdin
+            - docker build . --no-cache --file "${DOCKERFILE_BUILD}" --tag "${IMAGE}"
+            - docker save ${IMAGE} --output "${ARTIFACT_FILE}"
+            - docker push "${IMAGE}"
+            - docker load --input "${ARTIFACT_FILE}"
+          artifacts:
+            - "*.tar"
+          services:
+            - docker
+
+  branches:
+    live:
+      - step:
+          name: Build and Test
+          script:
+            - IMAGE_NAME="document-service:prod"
+            - echo ${DOCKERHUB_PASSWORD} | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+            - docker build . --file docker/Dockerfile.prod --tag ${IMAGE_NAME} --no-cache
+            - docker save ${IMAGE_NAME} --output "document-service-prod.tar"
+          artifacts:
+            - "*.tar"
+          services:
+            - docker
+          caches:
+            - docker
+
+      - step:
+          name: Deploy to Production
+          deployment: Production
+          script:
+            - IMAGE_NAME="document-service:prod"
+            - docker load --input "document-service-prod.tar"
+            - docker build . --no-cache --file "${DOCKERFILE_BUILD}" --tag "${IMAGE}"
+            - IMAGE=mariux/${IMAGE_NAME}
+            - docker push "${IMAGE}"
+          services:
+            - docker
+          artifacts:
+            - "*.tar"

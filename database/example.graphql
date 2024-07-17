@@ -1,0 +1,81 @@
+type Invoice {
+  id: ID!
+  date: Date!
+  total_cost: Float!
+  payment_type: PaymentType!
+  invoice_provider: String!
+  issuer_address: String!
+  issuer_details: String
+  invoice_items: [InvoiceItem!]!
+  invoice_url: URL!
+}
+
+type InvoiceItem {
+  id: ID!
+  invoice_id: string!
+  date: Date!
+  total: Float!
+  session_id: ID
+  rfid_card: ID
+}
+
+query FetchInvoices {
+  invoice {
+    id
+    date
+    total_cost
+    payment_type
+    invoice_provider
+    issuer_address
+    issuer_details
+    invoice_url
+    invoice_items {
+      invoice_id
+      rfid_card
+      session_id
+      total
+      date
+    }
+  }
+}
+
+mutation SaveInvoice {
+  insert_invoice(objects: {
+    id: "cd5343db-763c-4673-84fc-8d75c689cbc6",
+    date: "2023-09-26",
+    total_cost: "164.25",
+    payment_type: "webpay",
+    invoice_provider: "CPS",
+    issuer_address: "Invoicer City",
+    issuer_details: "Invocerrer",
+    invoice_url: "www.invoice.uk"
+  }) {
+    returning {
+      id
+      total_cost
+      invoice_url
+      invoice_items {
+        rfid_card
+        session_id
+        total
+        date
+      }
+    }
+  }
+  
+  insert_invoice_item(objects: {
+    invoice_id: "cd5343db-763c-4673-84fc-8d75c689cbc6", 
+    rfid_card: "RFID-KARD", 
+    session_id: "gelkgbadkjvb", 
+    total: "164.25",
+    date: "2023-09-26"
+  }) {
+    returning {
+      id
+      rfid_card
+      session_id
+      total
+      date
+    }
+  }
+}

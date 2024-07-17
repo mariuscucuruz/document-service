@@ -1,0 +1,16 @@
+pika
+python-dotenv
+pyminizip
+pathlib2
+pdfkit
+minio
+cryptography
+requests
+responses
+graphql-core
+redis
+fastapi
+uvicorn
+pylint
+pyyaml
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
