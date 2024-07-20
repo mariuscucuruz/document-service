@@ -6,7 +6,6 @@ import document_service
 from fastapi import FastAPI, status, Body, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.openapi.utils import get_openapi
 from Entity.models import EmailRequest
 from Service.Data.caching import Caching
 
