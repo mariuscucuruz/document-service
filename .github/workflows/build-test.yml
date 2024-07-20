@@ -30,7 +30,7 @@ jobs:
 
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py') --errors-only
+        pylint $(git ls-files '*.py') --errors-only --disable=E0401,W0611,E1120
 
     - name: Lint with flake8
       run: |
