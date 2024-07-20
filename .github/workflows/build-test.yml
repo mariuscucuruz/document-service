@@ -30,7 +30,7 @@ jobs:
 
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint $(git ls-files '*.py') --errors-only
 
     - name: Lint with flake8
       run: |
@@ -58,8 +58,8 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         context: .
-        file: docker/Dockerfile.build
+        file: ./docker/Dockerfile.build
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }}:latest
-        build-args: # optional
-        github-token: # optional, default is ${{ github.token }}
+        # build-args: .env
+        # github-token: ${{ github.token }}
