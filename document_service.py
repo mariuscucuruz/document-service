@@ -7,7 +7,6 @@ import json
 import datetime
 from pathlib2 import Path
 import pdfkit
-from Entity.models import EmailInvoiceRequest
 from environment import LoadEnv
 from Service.logg import Log
 from Service.Data.graphQuery import Query
@@ -19,6 +18,9 @@ from Service.storage import Storage
 
 
 class Main:
+    """
+    Document Service
+    """
     def __init__(self):
         self.env = LoadEnv()
         self.log = Log(__class__.__name__)
@@ -29,6 +31,9 @@ class Main:
 
 
     def rmq_callback(self, ch, method, properties, body):
+        """
+        RMQ callback
+        """
         self.log.info(f"---[ Listener::{properties} ]---")
 
         message_received = body.decode("utf-8")
@@ -72,6 +77,9 @@ class Main:
 
 
     def write_to_local_file(self, pdf_contents: str, pdf_filename: str):
+        """
+        Write PDF to local file
+        """
         basefilename = Path(pdf_filename)
         tmp_file = f"pdfs/{basefilename.name}"
 
@@ -107,7 +115,9 @@ class Main:
 
 
     def email_via_rmq(self, recipient: str, body_text: str, subject_text:str="Req Email via RMQ by Document Service"):
-        """Publish message to email service."""
+        """
+        Publish message to email service.
+        """
         try:
             payload = {
                 "sender": self.env.email_default_sender,
@@ -123,7 +133,6 @@ class Main:
                 correlation_id=datetime.datetime.now(),
                 exchange=self.env.email_service_rmq_echange,
                 routing_key=self.env.email_service_rmq_routekey,
-                reply_to="document-service",
             )
 
         except Exception as ex:
@@ -134,19 +143,24 @@ class Main:
 
 
     def get_invoice(self, invoiceId: str):
-        """Store the details of the request to be processed later."""
+        """
+        Store the details of the request to be processed later.
+        """
         try:
-            theInvoice = self.graph_ql.find(invoiceId)
-            self.log.info(f"Acknowledge receipt: {theInvoice}.")
+            the_document = self.graph_ql.find(invoiceId)
+            self.log.info(f"Acknowledge receipt: {the_document}.")
 
         except Exception as ex:
             self.log.warning(f"Cannot process request: {ex}")
             return False
 
-        return json.loads(theInvoice)
+        return json.loads(the_document)
 
 
 class RMQListener:
+    """
+    RMQListener class
+    """
     def __init__(self, callback):
         self.callback = callback
         self.queue = RMQConsumer()
@@ -154,6 +168,9 @@ class RMQListener:
         self.caching = Caching().get_client()
 
     def init_consumer(self):
+        """
+        Initialize consumer
+        """
         if self.queue.connect():
             if self.queue.declare_consumer(callback=self.callback):
                 try:

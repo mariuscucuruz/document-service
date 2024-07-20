@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-from helpers import (generic_error_message, make_invoice_model)
 import json
-import document_service
 from fastapi import FastAPI, status, Body, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+import document_service
+from helpers import (generic_error_message, make_invoice_model)
 from Entity.models import EmailRequest
 from Service.Data.caching import Caching
 
@@ -37,7 +37,9 @@ def health_check():
 
 @app.get("/get/")
 def get_invoice(request: Request):
-    """Fetch an invoice from DB."""
+    """
+    Fetch an invoice from DB.
+    """
     try:
         api_service = document_service.Main()
         api_response = api_service.get_invoice(
@@ -69,7 +71,9 @@ def get_invoice(request: Request):
 
 @app.post("/email")
 def send_email(req: EmailRequest = Body(...)):
-    """Request an invoice be emailed to a user."""
+    """
+    Request an invoice be emailed to a user.
+    """
     try:
         api_service = document_service.Main()
         api_service.email_via_rmq(
@@ -94,9 +98,11 @@ def send_email(req: EmailRequest = Body(...)):
     )
 
 
-### Exception Handlers ###
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
+    """
+    HTTP Exception Handler
+    """
     return JSONResponse(
         status_code=exc.status_code,
         content={

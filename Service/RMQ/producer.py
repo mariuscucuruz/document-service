@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
-"""RMQ Producer"""
-
-from Service.Data.caching import Caching
 from environment import LoadEnv
+from Service.Data.caching import Caching
 from Service.logg import Log
 import pika
 
 
 class RMQProducer:
+    """
+    RMQ Producer
+    """
+
     def __init__(self):
         self.channel = None
         self.env = LoadEnv()
@@ -19,6 +21,9 @@ class RMQProducer:
         self.caching = Caching().get_instance()
 
     def connect(self):
+        """
+        Connect to RMQ
+        """
         try:
             credentials = pika.PlainCredentials(self.env.rmq_user, self.env.rmq_pass)
             self.connection = pika.BlockingConnection(
@@ -38,6 +43,9 @@ class RMQProducer:
             return False
 
     def produce(self, exchange, routing_key, json_data, correlation_id):
+        """
+        Produce message to RMQ
+        """
         try:
             self.channel.basic_publish(
                 exchange=exchange,
