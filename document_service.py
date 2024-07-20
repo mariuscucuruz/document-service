@@ -142,12 +142,12 @@ class Main:
         return True
 
 
-    def get_invoice(self, invoiceId: str):
+    def get_invoice(self, document_id: str):
         """
         Store the details of the request to be processed later.
         """
         try:
-            the_document = self.graph_ql.find(invoiceId)
+            the_document = self.graph_ql.find(document_id)
             self.log.info(f"Acknowledge receipt: {the_document}.")
 
         except Exception as ex:
